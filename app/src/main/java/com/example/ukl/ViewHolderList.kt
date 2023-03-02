@@ -6,13 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
-class ViewHolder(inflater: LayoutInflater, parent: ViewGroup):
-    RecyclerView.ViewHolder(inflater.inflate(R.layout.template1, parent, false)),
+class ViewHolderList(inflater: LayoutInflater, parent: ViewGroup):
+    RecyclerView.ViewHolder(inflater.inflate(R.layout.template2, parent, false)),
     View.OnClickListener {
-
     private var imgView: ImageView? = null
     private var txtView1: TextView? = null
     private var txtView2: TextView? = null
