@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var edtEmail: EditText
     lateinit var edtPass: EditText
     lateinit var btnLogin: Button
+    lateinit var btnRegister: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +21,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         edtEmail = findViewById(R.id.email)
         edtPass = findViewById(R.id.password)
         btnLogin = findViewById(R.id.login)
+        btnRegister = findViewById(R.id.register)
 
         btnLogin.setOnClickListener(this)
+        btnRegister.setOnClickListener({
+            val moveIntent = Intent(this@MainActivity, Register::class.java)
+            startActivity(moveIntent)
+        })
     }
 
     fun isEmailValid(email: CharSequence): Boolean{

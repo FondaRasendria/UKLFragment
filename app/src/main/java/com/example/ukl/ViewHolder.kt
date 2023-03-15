@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 
 class ViewHolder(inflater: LayoutInflater, parent: ViewGroup):
@@ -20,6 +21,7 @@ class ViewHolder(inflater: LayoutInflater, parent: ViewGroup):
     private var btnFav: ImageButton? = null
 
     private var clicked = false
+    var item = Item()
 
     init {
         imgView = itemView.findViewById(R.id.product_image)
@@ -36,6 +38,7 @@ class ViewHolder(inflater: LayoutInflater, parent: ViewGroup):
         txtView1?.text = data.name
         txtView2?.text = data.harga
         txtView3?.text = data.game
+        item = data
     }
 
     override fun onClick(p0: View?) {

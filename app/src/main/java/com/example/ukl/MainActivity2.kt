@@ -4,76 +4,67 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.ukl.databinding.ActivityMain2Binding
-import com.example.ukl.databinding.ActivityMainBinding
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 
-class MainActivity2 : AppCompatActivity(), NavigationBarView.OnItemSelectedListener,
-    View.OnClickListener {
-    lateinit var textDikirim: TextView
-    lateinit var recycler: RecyclerView
-    lateinit var adapter: Adapter
-    lateinit var listAdapter: ListAdapter
-
-    lateinit var changeLayout: ImageButton
-
+class MainActivity2 : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
+    lateinit var pager: ViewPager
     lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
-        textDikirim = findViewById(R.id.dikirim)
-        recycler = findViewById(R.id.recycler)
-        changeLayout = findViewById(R.id.change_layout)
+        pager = findViewById(R.id.pager)
+        bottomNav = findViewById(R.id.bottom_navigation)
 
-        changeLayout.setOnClickListener(this)
+        val pageAdapter = ViewPageAdapter(initFragments(), supportFragmentManager)
+        pager.adapter = pageAdapter
 
         val email = intent.getStringExtra("String")
-        textDikirim.text = "Dikirim ke " + email
-
-        recycler.layoutManager = GridLayoutManager(this, 2)
+        val bundle = Bundle()
+        bundle.putString("email", email)
+        val fragment = Home()
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction().add(R.id.pager, fragment).commit()
 
         var data = ArrayList<Item>()
         data.addAll(ItemData().listData)
 
-        adapter = Adapter(data)
-        listAdapter = ListAdapter(data)
-        recycler.adapter = adapter
+        bottomNav.setOnItemSelectedListener(this)
+        pager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {}
+            override fun onPageSelected(position: Int) {
+                bottomNav.menu.getItem(position).setChecked(true)
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+
+        })
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.home -> {
-            }
-            R.id.wishlist -> {
-
-            }
-            R.id.profile -> {
-
-            }
+            R.id.home -> pager.currentItem = 0
+            R.id.wishlist -> pager.currentItem = 1
+            R.id.profile -> pager.currentItem = 2
             else -> {}
         }
         return true
     }
-
-    override fun onClick(p0: View?) {
-        if(recycler.adapter == adapter){
-            changeLayout.setBackgroundResource(R.drawable.ic_baseline_grid_on_24)
-            recycler.adapter = listAdapter
-            recycler.layoutManager = LinearLayoutManager(this)
-        }
-        else if(recycler.adapter == listAdapter){
-            changeLayout.setBackgroundResource(R.drawable.ic_baseline_format_list_bulleted_24)
-            recycler.adapter = adapter
-            recycler.layoutManager = GridLayoutManager(this, 2)
-        }
+    fun initFragments(): ArrayList<Fragment>{
+        return arrayListOf(
+            Home.newInstance(),
+            Favorite.newInstance(),
+            Profile.newInstance()
+        )
     }
 }
